@@ -81,7 +81,7 @@
 				},
 				{
 					"key": {
-						"expr": "ApplicationName"
+						"expr": "ame"
 					},
 					"values": [
 						{
@@ -91,7 +91,7 @@
 				},
 				{
 					"key": {
-						"expr": "ApplicationDisplayName"
+						"expr": "displayName"
 					},
 					"values": [
 						{
@@ -101,7 +101,7 @@
 				},
 				{
 					"key": {
-						"expr": "ApplicationAlias"
+						"expr": "alias"
 					},
 					"values": [
 						{
@@ -121,7 +121,7 @@
 				},
 				{
 					"key": {
-						"expr": "ApplicationLevel"
+						"expr": "level"
 					},
 					"values": [
 						{
@@ -131,7 +131,7 @@
 				},
 				{
 					"key": {
-						"expr": "ApplicationVersion"
+						"expr": "release"
 					},
 					"values": [
 						{
@@ -141,7 +141,7 @@
 				},
 				{
 					"key": {
-						"expr": "ApplicationDescription"
+						"expr": "description"
 					},
 					"values": [
 						{
@@ -151,7 +151,7 @@
 				},
 				{
 					"key": {
-						"expr": "ApplicationBusinessCriticality"
+						"expr": "businessCriticality"
 					},
 					"values": [
 						{
@@ -161,7 +161,7 @@
 				},
 				{
 					"key": {
-						"expr": "ApplicationBusinessCriticalityDescription"
+						"expr": "businessCriticalityDescription"
 					},
 					"values": [
 						{
@@ -171,7 +171,7 @@
 				},
 				{
 					"key": {
-						"expr": "ApplicationLifecycle"
+						"expr": "lifecycle"
 					},
 					"mode": "list",
 					"values": [
@@ -197,16 +197,7 @@
 						}
 					]
 				},
-				{
-					"key": {
-						"expr": "ApplicationServiceHours"
-					},
-					"values": [
-						{
-							"expr": "${lx.factsheet.serviceHours}"
-						}
-					]
-				},
+				
 			
 	
 				{
@@ -246,11 +237,11 @@
 							},
 							"map": [
 								{
-									"key": "ApplicationName",
+									"key": "name",
 									"value": "${integration.output.valueOfForEach.target.name}"
 								},
 								{
-									"key": "ApplicationDisplayName",
+									"key": "displayName",
 									"value": "${integration.output.valueOfForEach.target.displayName}"
 								},
 								{
@@ -258,7 +249,7 @@
 									"value": "${integration.output.valueOfForEach.target.id}"
 								},
 								{
-									"key": "HermesApplicationId",
+									"key": "otherVendorApplicationId",
 									"value": "${integration.output.valueOfForEach.target.externalId}"
 								}
 							]
