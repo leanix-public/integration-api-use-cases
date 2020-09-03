@@ -1,0 +1,208 @@
+{
+	"scope": {
+		"ids": [],
+		"facetFilters": [
+			{
+				"keys": [
+					"Interface"
+				],
+				"facetKey": "FactSheetTypes",
+				"operator": "OR"
+			}
+		]
+	},
+	"processors": [
+		{
+			"processorType": "outboundFactSheet",
+			"processorName": "Export of LeanIX Application and Interface data for CMDB usage",
+			"processorDescription": "Processor for exporting App and Interface data use in CMDB",
+			"enabled": true,
+			"fields": [
+				"level",
+				"dataFlowDirection",
+				"interfaceType",
+				"frequency"
+			],
+			"relations": {
+				"filter": [
+					"relInterfaceToProviderApplication",
+					"relInterfaceToConsumerApplication",
+					"relInterfaceToDataObject"
+				],
+				"fields": [
+					"activeFrom",
+					"activeUntil"
+				],
+				"targetFields": [
+					"name",
+					"displayName",
+					"externalId"
+				]
+			},
+			"output": [
+				{
+					"key": {
+						"expr": "content.id"
+					},
+					"values": [
+						{
+							"expr": "${lx.factsheet.id}"
+						}
+					]
+				},
+				{
+					"key": {
+						"expr": "content.type"
+					},
+					"values": [
+						{
+							"expr": "${lx.factsheet.type}"
+						}
+					]
+				},
+				{
+					"key": {
+						"expr": "DataFlow_Direction"
+					},
+					"values": [
+						{
+							"expr": "${lx.factsheet.dataFlowDirection}"
+						}
+					]
+				},
+				{
+					"key": {
+						"expr": "DataFlow_Frequency"
+					},
+					"values": [
+						{
+							"expr": "${lx.factsheet.frequency}"
+						}
+					]
+				},
+				{
+					"key": {
+						"expr": "DataFlow_Type"
+					},
+					"values": [
+						{
+							"expr": "${lx.factsheet.interfaceType}"
+						}
+					]
+				},
+				{
+					"key": {
+						"expr": "Application_Provider"
+					},
+					"mode": "list",
+					"values": [
+						{
+							"forEach": {
+								"elementOf": "${lx.relations}",
+								"filter": "${integration.output.valueOfForEach.type == 'relInterfaceToProviderApplication'}"
+							},
+							"map": [
+								{
+									"key": "LeanIX_UUID",
+									"value": "${integration.output.valueOfForEach.target.id}"
+								},
+								{
+									"key": "ApplicationName",
+									"value": "${integration.output.valueOfForEach.target.name}"
+								},
+								{
+									"key": "ApplicationDisplayName",
+									"value": "${integration.output.valueOfForEach.target.displayName}"
+								},
+								{
+									"key": "CmbdApplicationId",
+									"value": "${integration.output.valueOfForEach.target.externalId}"
+								},
+								{
+									"key": "ActiveFrom",
+									"value": "${integration.output.valueOfForEach.activeFrom}"
+								},
+								{
+									"key": "ActiveUntil",
+									"value": "${integration.output.valueOfForEach.activeUntil}"
+								}
+							]
+						}
+					]
+				},
+				{
+					"key": {
+						"expr": "Application_Consumer"
+					},
+					"mode": "list",
+					"values": [
+						{
+							"forEach": {
+								"elementOf": "${lx.relations}",
+								"filter": "${integration.output.valueOfForEach.type == 'relInterfaceToConsumerApplication'}"
+							},
+							"map": [
+								{
+									"key": "LeanIX_UUID",
+									"value": "${integration.output.valueOfForEach.target.id}"
+								},
+								{
+									"key": "ApplicationName",
+									"value": "${integration.output.valueOfForEach.target.name}"
+								},
+								{
+									"key": "ApplicationDisplayName",
+									"value": "${integration.output.valueOfForEach.target.displayName}"
+								},
+								{
+									"key": "CmbdApplicationId",
+									"value": "${integration.output.valueOfForEach.target.externalId}"
+								},
+								{
+									"key": "ActiveFrom",
+									"value": "${integration.output.valueOfForEach.activeFrom}"
+								},
+								{
+									"key": "ActiveUntil",
+									"value": "${integration.output.valueOfForEach.activeUntil}"
+								}
+							]
+						}
+					]
+				},
+				{
+					"key": {
+						"expr": "DataObject"
+					},
+					"mode": "list",
+					"values": [
+						{
+							"forEach": {
+								"elementOf": "${lx.relations}",
+								"filter": "${integration.output.valueOfForEach.type == 'relInterfaceToDataObject'}"
+							},
+							"map": [
+								{
+									"key": "LeanIX_UUID",
+									"value": "${integration.output.valueOfForEach.target.id}"
+								},
+								{
+									"key": "DataObjectName",
+									"value": "${integration.output.valueOfForEach.target.name}"
+								},
+								{
+									"key": "ActiveFrom",
+									"value": "${integration.output.valueOfForEach.activeFrom}"
+								},
+								{
+									"key": "ActiveUntil",
+									"value": "${integration.output.valueOfForEach.activeUntil}"
+								}
+							]
+						}
+					]
+				}
+			]
+		}
+	]
+}
