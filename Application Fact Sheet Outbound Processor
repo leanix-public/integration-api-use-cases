@@ -110,7 +110,7 @@
 				},
 				{
 					"key": {
-						"expr": "otherVendorApplicationId"
+						"expr": "exernalId"
 					},
 					"values": [
 						{
