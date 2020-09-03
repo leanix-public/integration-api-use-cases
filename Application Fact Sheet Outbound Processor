@@ -111,7 +111,7 @@
 				},
 				{
 					"key": {
-						"expr": "HermesApplicationId"
+						"expr": "otherVendorApplicationId"
 					},
 					"values": [
 						{
@@ -207,16 +207,7 @@
 						}
 					]
 				},
-				{
-					"key": {
-						"expr": "ApplicationEmergencyCommunication"
-					},
-					"values": [
-						{
-							"expr": "${lx.factsheet.emergencyCommunication}"
-						}
-					]
-				},
+			
 	
 				{
 					"key": {
