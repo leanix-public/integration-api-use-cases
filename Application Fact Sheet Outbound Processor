@@ -1,0 +1,304 @@
+{
+	"scope": {
+		"ids": [],
+		"facetFilters": [
+			{
+				"keys": [
+					"Application"
+				],
+				"facetKey": "FactSheetTypes",
+				"operator": "OR"
+			}
+		]
+	},
+	"processors": [
+		{
+			"processorType": "outboundFactSheet",
+			"processorName": "Export of LeanIX ApplicationData for CMDB usage",
+			"processorDescription": "Processor for exporting Application Data for use in CMDB",
+			"enabled": true,
+			"fields": [
+		
+				"externalId",
+				"release",
+				"lifecycle",
+				"name",
+				"displayName",
+				"businessCriticalityDescription",
+				"businessCriticality",
+				"alias",
+				"description"
+			],
+			"relations": {
+				"filter": [
+					"relApplicationToUserGroup",
+					"relToParent"
+				],
+				"fields": [
+					"usageType",
+					"activeFrom",
+					"activeUntil"
+				],
+				"targetFields": [
+					"name",
+					"displayName",
+					"externalId"
+				]
+			},
+			"tags": {
+				"groups": [
+					"Application Type",
+					"Kostenstelle",
+					"Solution"
+				]
+			},
+			"subscriptions": {
+				"types": [
+					"ACCOUNTABLE",
+					"RESPONSIBLE"
+				]
+			},
+			"output": [
+				{
+					"key": {
+						"expr": "content.id"
+					},
+					"values": [
+						{
+							"expr": "${lx.factsheet.id}"
+						}
+					]
+				},
+				{
+					"key": {
+						"expr": "content.type"
+					},
+					"values": [
+						{
+							"expr": "${lx.factsheet.type}"
+						}
+					]
+				},
+				{
+					"key": {
+						"expr": "ApplicationName"
+					},
+					"values": [
+						{
+							"expr": "${lx.factsheet.name}"
+						}
+					]
+				},
+				{
+					"key": {
+						"expr": "ApplicationDisplayName"
+					},
+					"values": [
+						{
+							"expr": "${lx.factsheet.displayName}"
+						}
+					]
+				},
+				{
+					"key": {
+						"expr": "ApplicationAlias"
+					},
+					"values": [
+						{
+							"expr": "${lx.factsheet.alias}"
+						}
+					]
+				},
+				{
+					"key": {
+						"expr": "HermesApplicationId"
+					},
+					"values": [
+						{
+							"expr": "${lx.factsheet.externalId}"
+						}
+					]
+				},
+				{
+					"key": {
+						"expr": "ApplicationLevel"
+					},
+					"values": [
+						{
+							"expr": "${lx.factsheet.level}"
+						}
+					]
+				},
+				{
+					"key": {
+						"expr": "ApplicationVersion"
+					},
+					"values": [
+						{
+							"expr": "${lx.factsheet.release}"
+						}
+					]
+				},
+				{
+					"key": {
+						"expr": "ApplicationDescription"
+					},
+					"values": [
+						{
+							"expr": "${lx.factsheet.description}"
+						}
+					]
+				},
+				{
+					"key": {
+						"expr": "ApplicationBusinessCriticality"
+					},
+					"values": [
+						{
+							"expr": "${lx.factsheet.businessCriticality}"
+						}
+					]
+				},
+				{
+					"key": {
+						"expr": "ApplicationBusinessCriticalityDescription"
+					},
+					"values": [
+						{
+							"expr": "${lx.factsheet.businessCriticalityDescription}"
+						}
+					]
+				},
+				{
+					"key": {
+						"expr": "ApplicationLifecycle"
+					},
+					"mode": "list",
+					"values": [
+						{
+							"expr": "plan:${lx.factsheet.lifecycle.plan}",
+							"regexMatch": ".*:.+$"
+						},
+						{
+							"expr": "phaseIn:${lx.factsheet.lifecycle.phaseIn}",
+							"regexMatch": ".*:.+$"
+						},
+						{
+							"expr": "active:${lx.factsheet.lifecycle.active}",
+							"regexMatch": ".*:.+$"
+						},
+						{
+							"expr": "phaseOut:${lx.factsheet.lifecycle.phaseOut}",
+							"regexMatch": ".*:.+$"
+						},
+						{
+							"expr": "endOfLife:${lx.factsheet.lifecycle.endOfLife}",
+							"regexMatch": ".*:.+$"
+						}
+					]
+				},
+				{
+					"key": {
+						"expr": "ApplicationServiceHours"
+					},
+					"values": [
+						{
+							"expr": "${lx.factsheet.serviceHours}"
+						}
+					]
+				},
+				{
+					"key": {
+						"expr": "ApplicationEmergencyCommunication"
+					},
+					"values": [
+						{
+							"expr": "${lx.factsheet.emergencyCommunication}"
+						}
+					]
+				},
+	
+				{
+					"key": {
+						"expr": "ApplicationResponsibilities"
+					},
+					"mode": "list",
+					"values": [
+						{
+							"forEach": {
+								"elementOf": "${lx.subscriptions}",
+								"filter": "${true}"
+							},
+							"map": [
+								{
+									"key": "responsiblePersonEmail",
+									"value": "${integration.output.valueOfForEach.user.email}"
+								},
+								{
+									"key": "ResponsiblePersonRole",
+									"value": "${integration.output.valueOfForEach.roles}"
+								}
+							]
+						}
+					]
+				},
+				{
+					"key": {
+						"expr": "ApplicationParent"
+					},
+					"mode": "list",
+					"values": [
+						{
+							"forEach": {
+								"elementOf": "${lx.relations}",
+								"filter": "${integration.output.valueOfForEach.type=='relToParent'}"
+							},
+							"map": [
+								{
+									"key": "ApplicationName",
+									"value": "${integration.output.valueOfForEach.target.name}"
+								},
+								{
+									"key": "ApplicationDisplayName",
+									"value": "${integration.output.valueOfForEach.target.displayName}"
+								},
+								{
+									"key": "LeanIXUUID",
+									"value": "${integration.output.valueOfForEach.target.id}"
+								},
+								{
+									"key": "HermesApplicationId",
+									"value": "${integration.output.valueOfForEach.target.externalId}"
+								}
+							]
+						}
+					]
+				},
+				{
+					"key": {
+						"expr": "ApplicationUserGroup"
+					},
+					"mode": "list",
+					"values": [
+						{
+							"forEach": {
+								"elementOf": "${lx.relations}",
+								"filter": "${integration.output.valueOfForEach.type=='relApplicationToUserGroup'}"
+							},
+							"map": [
+								{
+									"key": "UserGroupName",
+									"value": "${integration.output.valueOfForEach.target.displayName}"
+								},
+								{
+									"key": "UserGroupRole",
+									"value": "${integration.output.valueOfForEach.usageType}"
+								}
+							]
+						}
+					]
+				}
+			]
+		}
+	]
+}
